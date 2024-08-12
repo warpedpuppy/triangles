@@ -55,11 +55,37 @@
   this.ctx.lineTo(halfWidth, this.canvasHeight)
   this.ctx.stroke();
 
-  getSixty(200, { x: halfWidth, y: halfHeight });
+  let [point1, point2] = getSixty(100, { x: halfWidth, y: halfHeight });
+
+  ctx.translate(point2.x, point2.y);
+  ctx.rotate(-30 * (Math.PI / 180));
+  ctx.translate(-point2.x, -point2.y);
+  let [point3, point4] = getSixty(100, point2);
+
+  this.ctx.resetTransform()
+
+  ctx.translate(point1.x, point1.y);
+  ctx.rotate(30 * (Math.PI / 180));
+  ctx.translate(-point1.x, -point1.y);
+  let newPoint = getSixty(100, point1);
+
+
+  function drawBranch() {
+
+
+  }
+
+
+
+  // ctx.translate(newPoint.x, newPoint.y);
+  // ctx.rotate(30 * (Math.PI / 180));
+  // ctx.translate(-newPoint.x, -newPoint.y);
+  // getSixty(100, newPoint);
 
 
 
   function getSixty(radius, centerPoint) {
+
     let newX = (1 / 2) * radius;
     let finalY = (Math.sqrt(3) / 2) * radius;
 
@@ -67,22 +93,24 @@
     this.ctx.lineWidth = 3;
     this.ctx.beginPath();
     this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(centerPoint.x + newX, centerPoint.y)
-    this.ctx.lineTo(centerPoint.x + newX, centerPoint.y - finalY)
+    let topPoint = { x: centerPoint.x + newX, y: centerPoint.y - finalY }
+    this.ctx.moveTo(topPoint.x, topPoint.y)
     this.ctx.lineTo(centerPoint.x, centerPoint.y);
     this.ctx.stroke();
+
 
     this.ctx.beginPath();
     this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(centerPoint.x - newX, centerPoint.y)
-    this.ctx.lineTo(centerPoint.x - newX, centerPoint.y - finalY)
+    topPoint = { x: centerPoint.x - newX, y: centerPoint.y - finalY }
+    this.ctx.moveTo(topPoint.x, topPoint.y)
     this.ctx.lineTo(centerPoint.x, centerPoint.y);
     this.ctx.stroke();
 
-    return { x: centerPoint.x + newX, y: centerPoint.y - finalY }
+
+    return [{ x: centerPoint.x + newX, y: centerPoint.y - finalY }, { x: centerPoint.x - newX, y: centerPoint.y - finalY }]
 
   }
-  getThirty();
+
   function getThirty() {
     let radius = 200;
     let newX = (Math.sqrt(3) / 2) * radius;
@@ -104,7 +132,7 @@
     this.ctx.lineTo(halfWidth, halfHeight);
     this.ctx.stroke();
   }
-  thirtyWithSinAndCos()
+
   function thirtyWithSinAndCos() {
     let radius = 200;
     let newX = (Math.cos(60) * (180 / Math.pi)) * radius;
@@ -128,7 +156,7 @@
     this.ctx.lineTo(halfWidth, halfHeight);
     this.ctx.stroke();
   }
-  sixtyWithSinAndCos()
+
   function sixtyWithSinAndCos() {
     let radius = 200;
     let newX = (Math.sin(60) * (180 / Math.pi)) * radius;
