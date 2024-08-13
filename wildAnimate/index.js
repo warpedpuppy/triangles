@@ -133,7 +133,7 @@
         this.children++;
         console.log(this.children)
         returnArray.forEach(point => {
-          if (this.children === 1) stars.push(new Star(100, point, 0, this.ctx, this.children))
+          if (this.children < 3) stars.push(new Star(100, point, 0, this.ctx, this.children))
         })
 
       }
