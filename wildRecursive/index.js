@@ -55,111 +55,35 @@
   this.ctx.lineTo(halfWidth, this.canvasHeight)
   this.ctx.stroke();
 
+  let [point1, point2] = getSixty(100, { x: halfWidth, y: halfHeight });
+
+  ctx.translate(point2.x, point2.y);
+  ctx.rotate(-30 * (Math.PI / 180));
+  ctx.translate(-point2.x, -point2.y);
+  let [point3, point4] = getSixty(100, point2);
+
+  this.ctx.resetTransform()
+
+  ctx.translate(point1.x, point1.y);
+  ctx.rotate(30 * (Math.PI / 180));
+  ctx.translate(-point1.x, -point1.y);
+  let newPoint = getSixty(100, point1);
 
 
+  function drawBranch() {
 
 
-  // ctx.translate(point2.x, point2.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point2.x, -point2.y);
-
-
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point1.x, point1.y);
-  // ctx.rotate(30 * (Math.PI / 180));
-  // ctx.translate(-point1.x, -point1.y);
-  let [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-  getSixty(350, point1, 2);
-  getSixty(350, point2, 3);
-  getSixty(350, point3, 2);
-  getSixty(350, point4, 3);
-  getSixty(350, point5, 3);
-  getSixty(350, point6, 3);
-
-  ctx.translate(this.halfWidth, this.halfHeight);
-  ctx.rotate(90 * (Math.PI / 180));
-  ctx.translate(-this.halfWidth, -this.halfHeight);
-
-  [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-  getSixty(350, point1, 2);
-  getSixty(350, point2, 3);
-  getSixty(350, point3, 2);
-  getSixty(350, point4, 3);
-  getSixty(350, point5, 3);
-  getSixty(350, point6, 3);
-
-  ctx.translate(this.halfWidth, this.halfHeight);
-  ctx.rotate(90 * (Math.PI / 180));
-  ctx.translate(-this.halfWidth, -this.halfHeight);
-
-  [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-  getSixty(350, point1, 2);
-  getSixty(350, point2, 3);
-  getSixty(350, point3, 2);
-  getSixty(350, point4, 3);
-  getSixty(350, point5, 3);
-  getSixty(350, point6, 3);
-
-
-  ctx.translate(this.halfWidth, this.halfHeight);
-  ctx.rotate(90 * (Math.PI / 180));
-  ctx.translate(-this.halfWidth, -this.halfHeight);
-
-  [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-  getSixty(350, point1, 2);
-  getSixty(350, point2, 3);
-  getSixty(350, point3, 2);
-  getSixty(350, point4, 3);
-  getSixty(350, point5, 3);
-  getSixty(350, point6, 3);
-
-
-  // this.ctx.resetTransform();
-  // const point2D = new DOMPointReadOnly(point3.x, point3.y)
-  // this.ctx.beginPath();
-  // this.ctx.arc(point2D.x, point2D.y, 5, 0, 2 * Math.PI);
-  // this.ctx.stroke();
-  // this.ctx.resetTransform();
-
-  // ctx.translate(point2D.x, point2D.y);
-  // this.ctx.arc(point2D.x, point2D.y, 2, 0, 2 * Math.PI);
-  // ctx.rotate(10 * (Math.PI / 180));
-  // ctx.translate(-point3.x, -point3.y);
-  // getSixty(25, point3);
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point4.x, point4.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point4.x, -point4.y);
-  // getSixty(25, point4);
-
-
-
-
-
-  // ctx.translate(point5.x, point5.y);
-  // ctx.rotate(30 * (Math.PI / 180));
-  // ctx.translate(-point5.x, -point5.y);
-  // getSixty(25, point5);
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point6.x, point6.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point6.x, -point6.y);
-  // getSixty(25, point6);
+  }
 
 
 
 
 
 
+  function getSixty(radius, centerPoint) {
 
-
-  function getSixty(radius, centerPoint, iteration) {
-
-    let newX = ((1 / 2) * radius)
-    let finalY = ((Math.sqrt(3) / 2) * radius)
+    let newX = (1 / 2) * radius;
+    let finalY = (Math.sqrt(3) / 2) * radius;
 
     this.ctx.strokeStyle = "green";
     this.ctx.lineWidth = 3;
@@ -173,43 +97,13 @@
 
     this.ctx.beginPath();
     this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    let topPoint2 = { x: centerPoint.x - newX, y: centerPoint.y - finalY }
-    this.ctx.moveTo(topPoint2.x, topPoint2.y)
-    this.ctx.lineTo(centerPoint.x, centerPoint.y);
-    this.ctx.stroke();
-
-    let newX2 = (Math.sqrt(3) / 2) * radius;
-    let finalY2 = (1 / 2) * radius;
-
-    this.ctx.strokeStyle = "green";
-    this.ctx.lineWidth = 3;
-    this.ctx.beginPath();
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    let topPoint3 = { x: centerPoint.x + newX2, y: centerPoint.y }
-    this.ctx.lineTo(centerPoint.x + newX2, centerPoint.y)
-    let topPoint4 = { x: centerPoint.x + newX2, y: centerPoint.y - finalY2 }
-    this.ctx.moveTo(centerPoint.x + newX2, centerPoint.y - finalY2)
-    this.ctx.lineTo(centerPoint.x, centerPoint.y);
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    let topPoint5 = { x: centerPoint.x - newX2, y: centerPoint.y }
-    this.ctx.lineTo(centerPoint.x - newX2, centerPoint.y)
-    let topPoint6 = { x: centerPoint.x - newX2, y: centerPoint.y - finalY2 }
-    this.ctx.moveTo(centerPoint.x - newX2, centerPoint.y - finalY2)
+    topPoint = { x: centerPoint.x - newX, y: centerPoint.y - finalY }
+    this.ctx.moveTo(topPoint.x, topPoint.y)
     this.ctx.lineTo(centerPoint.x, centerPoint.y);
     this.ctx.stroke();
 
 
-    return [
-      topPoint,
-      topPoint2,
-      topPoint3,
-      topPoint4,
-      topPoint5,
-      topPoint6
-    ]
+    return [{ x: centerPoint.x + newX, y: centerPoint.y - finalY }, { x: centerPoint.x - newX, y: centerPoint.y - finalY }]
 
   }
 
