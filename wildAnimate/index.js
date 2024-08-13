@@ -5,327 +5,194 @@
   this.canvas.height = this.canvasHeight = window.innerHeight;
   let halfWidth = this.halfWidth = window.innerWidth / 2;
   let halfHeight = this.halfHeight = window.innerHeight / 2;
-  let dotWidth = 5;
-  this.ctx.lineCap = "round";
 
-  // this.ctx.beginPath();
-  // this.ctx.arc(halfWidth, halfHeight, 200, 0, 2 * Math.PI);
-  // this.ctx.moveTo(0, halfHeight)
-  // this.ctx.lineTo(this.canvasWidth, halfHeight)
-  // this.ctx.moveTo(halfWidth, 0)
-  // this.ctx.lineTo(halfWidth, this.canvasHeight)
-  // this.ctx.stroke();
 
-  function start() {
-    let length = 200;
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth + length, halfHeight)
-    this.ctx.arc(halfWidth + length, halfHeight, 100, 0, 2 * Math.PI);
-    this.ctx.stroke();
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth - length, halfHeight);
-    this.ctx.arc(halfWidth - length, halfHeight, 100, 0, 2 * Math.PI);
-    this.ctx.stroke();
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth, halfHeight + length);
-    this.ctx.stroke();
-    this.ctx.beginPath();
-    this.ctx.arc(halfWidth, halfHeight + length, 100, 0, 2 * Math.PI);
-    this.ctx.stroke();
 
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth, halfHeight - length);
-    this.ctx.stroke();
-    this.ctx.beginPath();
-    this.ctx.arc(halfWidth, halfHeight - length, 100, 0, 2 * Math.PI);
-    this.ctx.stroke();
+
+  class Star {
+    constructor(radius, centerPoint, ratio, ctx, children = 0) {
+      this.radius = radius;
+      this.centerPoint = centerPoint;
+      this.ratio = ratio;
+      this.ctx = ctx;
+      this.children = children;
+
+      // for the 60 degs
+      this.newX = ((1 / 2) * radius);
+      this.finalY = ((Math.sqrt(3) / 2) * radius);
+
+      //for the 30 degs
+      this.newX2 = (Math.sqrt(3) / 2) * radius;
+      this.finalY2 = (1 / 2) * radius;
+
+      this.spawned = false;
+      this.chooseArray = [];
+      this.counter = 0;
+      this.chooser();
+    }
+    chooser() {
+      for (let i = 0; i < 7; i++) {
+        this.chooseArray.push(true)
+        // this.chooseArray.push(Math.random() * 2000 < 500)
+      }
+
+      if (!this.chooseArray.includes(true)) {
+        this.chooseArray[Math.floor(Math.random() * this.chooseArray.length)] = true;
+      }
+    }
+    drawLine(x1, y1, x2, y2, ratio) {
+      x2 = x1 + ratio * (x2 - x1);
+      y2 = y1 + ratio * (y2 - y1);
+      return { x: x2, y: y2 }
+    }
+    draw() {
+      const { centerPoint, ctx, drawLine } = this;
+      this.ctx.strokeStyle = "green";
+      this.ctx.lineWidth = 1;
+      this.ctx.beginPath();
+      let returnArray = [];
+      let nextPoint;
+      // this.counter++;
+      if (this.children > 10) {
+        return "done";
+      }
+      if (centerPoint.x > this.canvasWidth || centerPoint.x < 0 || centerPoint.y > this.canvasHeight || centerPoint.y < 0) {
+        return "done";
+      }
+
+      if (this.chooseArray[6]) {
+        let topPoint = { x: centerPoint.x + this.newX, y: centerPoint.y - this.finalY }
+        returnArray.push(topPoint);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint.x, topPoint.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y);
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[0]) {
+        let topPoint2 = { x: centerPoint.x - this.newX, y: centerPoint.y - this.finalY }
+        returnArray.push(topPoint2);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint2.x, topPoint2.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[1]) {
+        let topPoint3 = { x: centerPoint.x + this.newX2, y: centerPoint.y }
+        returnArray.push(topPoint3);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint3.x, topPoint3.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[2]) {
+        let topPoint4 = { x: centerPoint.x + this.newX2, y: centerPoint.y - this.finalY2 }
+        returnArray.push(topPoint4);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint4.x, topPoint4.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[3]) {
+        let topPoint5 = { x: centerPoint.x - this.newX2, y: centerPoint.y }
+        returnArray.push(topPoint5);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint5.x, topPoint5.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[4]) {
+        let topPoint6 = { x: centerPoint.x - this.newX2, y: centerPoint.y - this.finalY2 };
+        returnArray.push(topPoint6);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint6.x, topPoint6.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+      if (this.chooseArray[5]) {
+        let topPoint7 = { x: centerPoint.x, y: centerPoint.y - this.radius };
+        returnArray.push(topPoint7);
+        nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint7.x, topPoint7.y, this.ratio)
+        ctx.moveTo(centerPoint.x, centerPoint.y);
+        ctx.lineTo(nextPoint.x, nextPoint.y)
+        ctx.stroke();
+      }
+
+
+      if (this.ratio < 1) {
+        this.ratio += 0.01;
+      } else if (this.spawned === false) {
+        this.spawned = true;
+        this.children++;
+        console.log(this.children)
+        returnArray.forEach(point => {
+          if (this.children === 1) stars.push(new Star(100, point, 0, this.ctx, this.children))
+        })
+
+      }
+
+    }
   }
 
+  this.ctx.strokeStyle = "green";
+  this.ctx.lineWidth = 0.1;
   this.ctx.beginPath();
-  this.ctx.arc(halfWidth, halfHeight, 200, 0, 2 * Math.PI);
-  this.ctx.moveTo(0, halfHeight)
-  this.ctx.lineTo(this.canvasWidth, halfHeight)
-  this.ctx.moveTo(halfWidth, 0)
-  this.ctx.lineTo(halfWidth, this.canvasHeight)
-  this.ctx.stroke();
-
-
-
-
-
-  // ctx.translate(point2.x, point2.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point2.x, -point2.y);
-
-
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point1.x, point1.y);
-  // ctx.rotate(30 * (Math.PI / 180));
-  // ctx.translate(-point1.x, -point1.y);
-
-  function makeDesign() {
-    let [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-    getSixty(350, point1, 2);
-    getSixty(350, point2, 3);
-    getSixty(350, point3, 2);
-    getSixty(350, point4, 3);
-    getSixty(350, point5, 3);
-    getSixty(350, point6, 3);
-
-    ctx.translate(this.halfWidth, this.halfHeight);
-    ctx.rotate(90 * (Math.PI / 180));
-    ctx.translate(-this.halfWidth, -this.halfHeight);
-
-    [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-    getSixty(350, point1, 2);
-    getSixty(350, point2, 3);
-    getSixty(350, point3, 2);
-    getSixty(350, point4, 3);
-    getSixty(350, point5, 3);
-    getSixty(350, point6, 3);
-
-    ctx.translate(this.halfWidth, this.halfHeight);
-    ctx.rotate(90 * (Math.PI / 180));
-    ctx.translate(-this.halfWidth, -this.halfHeight);
-
-    [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-    getSixty(350, point1, 2);
-    getSixty(350, point2, 3);
-    getSixty(350, point3, 2);
-    getSixty(350, point4, 3);
-    getSixty(350, point5, 3);
-    getSixty(350, point6, 3);
-
-
-    ctx.translate(this.halfWidth, this.halfHeight);
-    ctx.rotate(90 * (Math.PI / 180));
-    ctx.translate(-this.halfWidth, -this.halfHeight);
-
-    [point1, point2, point3, point4, point5, point6] = getSixty(300, { x: halfWidth, y: halfHeight }, 1);
-    getSixty(350, point1, 2);
-    getSixty(350, point2, 3);
-    getSixty(350, point3, 2);
-    getSixty(350, point4, 3);
-    getSixty(350, point5, 3);
-    getSixty(350, point6, 3);
-  }
-
-
-
-  // this.ctx.resetTransform();
-  // const point2D = new DOMPointReadOnly(point3.x, point3.y)
-  // this.ctx.beginPath();
-  // this.ctx.arc(point2D.x, point2D.y, 5, 0, 2 * Math.PI);
-  // this.ctx.stroke();
-  // this.ctx.resetTransform();
-
-  // ctx.translate(point2D.x, point2D.y);
-  // this.ctx.arc(point2D.x, point2D.y, 2, 0, 2 * Math.PI);
-  // ctx.rotate(10 * (Math.PI / 180));
-  // ctx.translate(-point3.x, -point3.y);
-  // getSixty(25, point3);
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point4.x, point4.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point4.x, -point4.y);
-  // getSixty(25, point4);
-
-
-
-
-
-  // ctx.translate(point5.x, point5.y);
-  // ctx.rotate(30 * (Math.PI / 180));
-  // ctx.translate(-point5.x, -point5.y);
-  // getSixty(25, point5);
-
-  // this.ctx.resetTransform();
-  // ctx.translate(point6.x, point6.y);
-  // ctx.rotate(-30 * (Math.PI / 180));
-  // ctx.translate(-point6.x, -point6.y);
-  // getSixty(25, point6);
-
-
-
-
-  function drawLine(x1, y1, x2, y2, ratio) {
-    // lines.clear();
-    // lines.moveTo(x1, y1);
-    x2 = x1 + ratio * (x2 - x1);
-    y2 = y1 + ratio * (y2 - y1);
-    // lines.lineTo(x2, y2);
-    // lines.stroke({ width: 1, color: 0xffd900 });
-    return { x: x2, y: y2 }
-  }
-  let ratio = 0;
+  let stars = [];
+  let s = new Star(100, { x: halfWidth, y: halfHeight }, 0, this.ctx);
+  stars.push(s)
   animate();
-
   function animate() {
-    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
     ctx.resetTransform();
+    this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    stars.forEach((star, index) => {
+      let ret = star.draw();
 
-    makeFan(300, { x: halfWidth, y: halfHeight }, ratio);
+    })
 
+
+
+
+    ctx.translate(this.halfWidth, this.halfHeight);
+    ctx.rotate(90 * (Math.PI / 180));
+    ctx.translate(-this.halfWidth, -this.halfHeight);
+
+    stars.forEach((star, index) => {
+      let ret = star.draw();
+
+    })
     ctx.translate(this.halfWidth, this.halfHeight);
     ctx.rotate(180 * (Math.PI / 180));
     ctx.translate(-this.halfWidth, -this.halfHeight);
 
-    makeFan(300, { x: halfWidth, y: halfHeight }, ratio);
+    stars.forEach((star, index) => {
+      let ret = star.draw();
+      if (ret === "done") stars.splice(index, 1)
+    })
+    ctx.translate(this.halfWidth, this.halfHeight);
+    ctx.rotate(-90 * (Math.PI / 180));
+    ctx.translate(-this.halfWidth, -this.halfHeight);
 
-    if (ratio < 1) ratio += 0.01;
+    stars.forEach((star, index) => {
+      let ret = star.draw();
+      if (ret === "done") stars.splice(index, 1)
+    })
+
+
+
+
 
     requestAnimationFrame(animate)
   }
 
 
 
-  function makeFan(radius, centerPoint, ratio) {
-
-    let newX = ((1 / 2) * radius)
-    let finalY = ((Math.sqrt(3) / 2) * radius)
-
-    this.ctx.strokeStyle = "green";
-    this.ctx.lineWidth = 3;
-    this.ctx.beginPath();
-
-    let topPoint = { x: centerPoint.x + newX, y: centerPoint.y - finalY }
-    let nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint.x, topPoint.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y);
-    this.ctx.stroke();
-
-    let topPoint2 = { x: centerPoint.x - newX, y: centerPoint.y - finalY }
-    nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint2.x, topPoint2.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y)
-    this.ctx.stroke();
-
-    let newX2 = (Math.sqrt(3) / 2) * radius;
-    let finalY2 = (1 / 2) * radius;
-
-    let topPoint3 = { x: centerPoint.x + newX2, y: centerPoint.y }
-    nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint3.x, topPoint3.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y)
-    this.ctx.stroke();
-
-
-
-    let topPoint4 = { x: centerPoint.x + newX2, y: centerPoint.y - finalY2 }
-    nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint4.x, topPoint4.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y)
-    this.ctx.stroke();
-
-    let topPoint5 = { x: centerPoint.x - newX2, y: centerPoint.y }
-    nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint5.x, topPoint5.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y)
-    this.ctx.stroke();
-
-
-    let topPoint6 = { x: centerPoint.x - newX2, y: centerPoint.y - finalY2 };
-    nextPoint = drawLine(centerPoint.x, centerPoint.y, topPoint6.x, topPoint6.y, ratio)
-    this.ctx.moveTo(centerPoint.x, centerPoint.y);
-    this.ctx.lineTo(nextPoint.x, nextPoint.y)
-    this.ctx.stroke();
-
-
-    return [
-      topPoint,
-      topPoint2,
-      topPoint3,
-      topPoint4,
-      topPoint5,
-      topPoint6
-    ]
-
-  }
-
-  function getThirty() {
-    let radius = 200;
-    let newX = (Math.sqrt(3) / 2) * radius;
-    let finalY = (1 / 2) * radius;
-
-    this.ctx.strokeStyle = "green";
-    this.ctx.lineWidth = 3;
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth + newX, halfHeight)
-    this.ctx.lineTo(halfWidth + newX, halfHeight - finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth - newX, halfHeight)
-    this.ctx.lineTo(halfWidth - newX, halfHeight - finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-  }
-
-  function thirtyWithSinAndCos() {
-    let radius = 200;
-    let newX = (Math.cos(60) * (180 / Math.pi)) * radius;
-    let finalY = (Math.sin(60) * (180 / Math.pi)) * radius;
-    console.log("thirty:", Math.sin(30), Math.cos(30))
-    console.log("sixty:", Math.sin(60), Math.cos(60))
-    console.log(Math.cos(30), (Math.sqrt(3) / 2) * (Math.PI / 180))
-    this.ctx.strokeStyle = "green";
-    this.ctx.lineWidth = 3;
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth + newX, halfHeight)
-    this.ctx.lineTo(halfWidth + newX, halfHeight + finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth - newX, halfHeight)
-    this.ctx.lineTo(halfWidth - newX, halfHeight + finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-  }
-
-  function sixtyWithSinAndCos() {
-    let radius = 200;
-    let newX = (Math.sin(60) * (180 / Math.pi)) * radius;
-    let finalY = (Math.cos(60) * (180 / Math.pi)) * radius;
-
-    this.ctx.strokeStyle = "green";
-    this.ctx.lineWidth = 3;
-    this.ctx.lineCap = "round";
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth + newX, halfHeight)
-    this.ctx.lineTo(halfWidth + newX, halfHeight + finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-
-    this.ctx.beginPath();
-    this.ctx.moveTo(halfWidth, halfHeight);
-    this.ctx.lineTo(halfWidth - newX, halfHeight)
-    this.ctx.lineTo(halfWidth - newX, halfHeight + finalY)
-    this.ctx.lineTo(halfWidth, halfHeight);
-    this.ctx.stroke();
-
-  }
-
 
 })()
 
-function getTriangle(radius, centerPoint) {
-  let point1 = { x: radius * Math.cos(0) + centerPoint.x, y: radius * Math.sin(0) + centerPoint.y }
-  let point2 = { x: radius * Math.cos((1 / 3) * (2 * Math.PI)) + centerPoint.x, y: radius * Math.sin((1 / 3) * (2 * Math.PI)) + centerPoint.y }
-  let point3 = { x: radius * Math.cos((2 / 3) * (2 * Math.PI)) + centerPoint.x, y: radius * Math.sin((2 / 3) * (2 * Math.PI)) + centerPoint.y }
-  return { point1, point2, point3 }
-}
